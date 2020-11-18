@@ -43,96 +43,76 @@ def poner_establecimientos(jugador):
     def generar_objetivo(tablero, fila_o_columna, longitud, objetivo):
 
         def hay_espacio(tablero, fila_o_columna, filaDesde, filaHasta, columnaDesde, columnaHasta):
-            if fila_o_columna == "columna":
+            if fila_o_columna == "fila":
                 j = columnaDesde
                 while j <= columnaHasta:
-                    j += 1
+                    #print(j, " ", filaDesde)
                     if tablero[filaDesde][j] != "O":
                         return False
+                    j += 1
             else: 
                 i = filaDesde
                 while i <= filaHasta:
+                    #print(i, " ", columnaHasta)
+                    if tablero[i][columnaDesde] != "O":
+                        return False
                     i += 1
-                    if tablero[i][columnaHasta] != "O":
-                        return False    
             return True 
 
         lon = longitud - 1
 
-        if fila_o_columna == "columna":
-            fila = random.randint(0, maxPosicion)
-            columna = random.randint(0, maxPosicion - lon)
-
-            if longitud == 6:
-                ak = 0
-                j = columna
-                while(ak < longitud):
-                    tablero[fila][j] = objetivo
-                    j += 1
-                    ak += 1
-            else 
-                ok = 0
-                while (ok == 0):
-                    fila = random.randint(0, maxPosicion)
-                    columna = random.randint(0, maxPosicion-lon)
-                    if(hay_espacio(tablero, "columna", fila, 0, columna, columna + longitud)):
-                        ak = 0
-                        j = columna
-                        while (ak < longitud):
-                            tablero[fila][j] = objetivo
-                            j += 1
-                            ak += 1
-                            ok += 1
+        if fila_o_columna == "fila":
+            ok = 0
+            while (ok == 0):
+                fila = random.randint(0, maxPosicion)
+                columna = random.randint(0, maxPosicion-lon)
+                if(hay_espacio(tablero, "fila", fila, 0, columna, columna + lon)):
+                    ak = 0
+                    j = columna
+                    while (ak < longitud):
+                        tablero[fila][j] = objetivo
+                        j += 1
+                        ak += 1
+                        ok += 1 
         else: 
-            fila = random.randint(0, maxPosicion - lon)
-            columna = random.randint(0, maxPosicion)
-
-            if longitud == 6:
-                ak = 0
-                i = fila
-                while(ak < longitud):
-                    tablero[i][columna] = objetivo
-                    i += 1
-                    ak += 1
-            else 
-                ok = 0
-                while (ok == 0):
-                    fila = random.randint(0, maxPosicion - lon)
-                    columna = random.randint(0, maxPosicion)
-                    if(hay_espacio(tablero, "fila", fila, fila + longitud, columna, 0)):
-                        ak = 0
-                        i = fila
-                        while (ak < longitud):
-                            tablero[i][columna] = objetivo
-                            i += 1
-                            ak += 1
-                            ok += 1
+            ok = 0
+            while (ok == 0):
+                fila = random.randint(0, maxPosicion - lon)
+                columna = random.randint(0, maxPosicion)
+                if(hay_espacio(tablero, "columna", fila, fila + lon, columna, 0)):
+                    ak = 0
+                    i = fila
+                    while (ak < longitud):
+                        tablero[i][columna] = objetivo
+                        i += 1
+                        ak += 1
+                        ok += 1
 
     tablero = jugador["mapa"]
     maxPosicion = len(tablero) - 1
 
     if jugador["nombre"] == "Sandokan y sus amigos":
         # OBJETIVO DE LONGITUD 6
-        generar_objetivo(tablero, "fila", 6, "6"):
+        generar_objetivo(tablero, "fila", 6, "6")
 
         # OBJETIVO DE LONGITUD 3
-        generar_objetivo(tablero, "columna", 3, "3"):
+        generar_objetivo(tablero, "columna", 3, "3")
         
         # PRIMER OBJETIVO DE LONGITUD 2
-        generar_objetivo(tablero, "fila", 2, "2.1"):
+        generar_objetivo(tablero, "fila", 2, "2")
         
-        # SEGUNDO OBJETIVO DE LONGITUD 2
-        generar_objetivo(tablero, "columna", 2, "2.2"):
+        # SEGUNDO OBJETIVO DE LONGITUD 2 // USO 7 PARA NO REPETIR EL 2, PERO PODRÍA USAR CUALQUIER VALOR
+        generar_objetivo(tablero, "columna", 2, "7")
         
         # OBJETIVO DE LONGITUD 1
-        generar_objetivo(tablero, "fila", 1, "1"):
+        generar_objetivo(tablero, "fila", 1, "1")
     
     else:
-        generar_objetivo(tablero, "columna", 6, "6"):
-        generar_objetivo(tablero, "fila", 3, "3"):
-        generar_objetivo(tablero, "columna", 2, "2.1"):
-        generar_objetivo(tablero, "fila", 2, "2.2"):
-        generar_objetivo(tablero, "columna", 1, "1"):
+        generar_objetivo(tablero, "columna", 6, "6")
+        generar_objetivo(tablero, "fila", 3, "3")
+        generar_objetivo(tablero, "columna", 2, "2")
+        generar_objetivo(tablero, "fila", 2, "7")
+        generar_objetivo(tablero, "columna", 1, "1")
     
     return tablero
 
@@ -145,6 +125,7 @@ def jugar(atacante, defensor):
 
     fil = int(input("¿Qué fila desea atacar?  ")) - 1
     col = int(input("¿Qué columna atacara?  ")) - 1
+ 
     if defensor["mapa"][fil][col] != "O":
         if defensor["mapa"][fil][col] == "6":
             defensor["objetivos"][0][0] -= 1
@@ -159,11 +140,11 @@ def jugar(atacante, defensor):
             defensor["objetivos"][1][0] -= 1
             if defensor["objetivos"][1][0] == 0:
                 print(defensor["objetivos"][1][1], " DESTRUIDO/A")
-        elif defensor["mapa"][fil][col] == "2.1":
+        elif defensor["mapa"][fil][col] == "2":
             defensor["objetivos"][2][0] -= 1
             if defensor["objetivos"][2][0] == 0:
                 print(defensor["objetivos"][2][1], " DESTRUIDO/A")
-        elif defensor["mapa"][fil][col] == "2.2":
+        elif defensor["mapa"][fil][col] == "7":
             defensor["objetivos"][3][0] -= 1
             if defensor["objetivos"][3][0] == 0:
                 print(defensor["objetivos"][3][1], " DESTRUIDO/A")
@@ -188,8 +169,10 @@ def crear_mapa(tamanio):
     tablero = []
     for i in range(tamanio):
         tablero.append([])
-        for j in range(tamanio):
+        j = 0
+        while j < tamanio:
             tablero[i].append("O")
+            j += 1
     return tablero
 
 # definimos una funcion que nos muestre el tablero
@@ -267,10 +250,12 @@ def main():
     jugador1["mapa"] = crear_mapa(tamanio)
     jugador2["mapa"] = crear_mapa(tamanio)
     jugador1["tablero"] = crear_mapa(tamanio)
-    jugador1["tablero"] = crear_mapa(tamanio)
+    jugador2["tablero"] = crear_mapa(tamanio)
 
     jugador1["mapa"] = poner_establecimientos(jugador1)
     jugador2["mapa"] = poner_establecimientos(jugador2)
+
+    mostrar_mapa(jugador2["mapa"])
 
     # QUITÉ LAS DECLARACIONES DE VARIABLES QUE NO SERVÍAN
 
@@ -284,7 +269,15 @@ def main():
         jugar(jugador1, jugador2)
         mostrar_mapa(jugador1["tablero"])
 
+        if not quedan_objetivos(jugador2):
+            break
+
         jugar(jugador2, jugador1)
         mostrar_mapa(jugador2["tablero"])
+    
+    if quedan_objetivos(jugador1):
+        print("Ganó el Jugador 1: ", jugador1["nombre"])
+    else:
+        print("Ganó el Jugador 2: ", jugador2["nombre"])
 
 main()

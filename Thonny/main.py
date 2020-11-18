@@ -1,273 +1,155 @@
 import random
 
-# QUITÉ ESTAS PRIMERAS LÍNEAS Y LAS PUSE DENTRO DEL MAIN, YA QUE AHÍ ES DONDE VERDADERAMENTE COMIENZA
-# LA EJECUCIÓN DE TU PROGRAMA. ESTE ESPACIO DE ACÁ ARRIBA EN LÍNEAS GENERALES SOLO SE USA PARA
-# IMPORTAR MÓDULOS Y DECLARAR FUNCIONES
-
-def jugadores(eleccion):
+def jugadores(eleccion, jugador1, jugador2):
+    # SE LE ASIGNAN A JUGADOR1 Y JUGADOR2 SUS RESPECTIVOS NOMBRES Y NOMBRES DE OBJETIVOS
     if (eleccion == 1):
-        jugador_1= "Sadokan y sus amigos"
-        jugador_2= "Armada británica"
-    if (eleccion != 1):
-        jugador_1= "Armada británica"
-        jugador_2= "Sadokan y sus amigos"
-    print("El jugador 1 será ", jugador_1, " y el jugador 2 será ", jugador_2)
-    # QUITÉ EL RETURN, YA QUE ESOS VALORES NO LOS USABAS NUNCA
+        jugador1["nombre"] = "Sandokan y sus amigos"
+        jugador1["objetivos"][0][1] = "Fuerte"
+        jugador1["objetivos"][1][1] = "Campamento de defensa"
+        jugador1["objetivos"][2][1] = "Depósito de armas"
+        jugador1["objetivos"][3][1] = "Defensa Norte"
+        jugador1["objetivos"][4][1] = "Defensa Sur"
 
-#coloca los establesimientos de sadokan
-def poner_establecimientos_s(tablero):
-    #Fuerte
-    fuerte = 6
+        jugador2["nombre"] = "Armada británica"
+        jugador2["objetivos"][0][1] = "Crucero pesado"
+        jugador2["objetivos"][1][1] = "Galeón"
+        jugador2["objetivos"][2][1] = "Cañonero"
+        jugador2["objetivos"][3][1] = "Galera"
+        jugador2["objetivos"][4][1] = "Barcaza"
+    else:
+        jugador1["nombre"] = "Armada británica"
+        jugador1["objetivos"][0][1] = "Crucero pesado"
+        jugador1["objetivos"][1][1] = "Galeón"
+        jugador1["objetivos"][2][1] = "Cañonero"
+        jugador1["objetivos"][3][1] = "Galera"
+        jugador1["objetivos"][4][1] = "Barcaza"
+        
+        jugador2["nombre"] = "Sandokan y sus amigos"
+        jugador2["objetivos"][0][1] = "Fuerte"
+        jugador2["objetivos"][1][1] = "Campamento de defensa"
+        jugador2["objetivos"][2][1] = "Depósito de armas"
+        jugador2["objetivos"][3][1] = "Defensa Norte"
+        jugador2["objetivos"][4][1] = "Defensa Sur"
+
+    print("El jugador 1 será ", jugador1["nombre"], " y el jugador 2 será ", jugador2["nombre"])
+
+def poner_establecimientos(jugador):
+
+    def generar_objetivo(tablero, fila_o_columna, longitud, objetivo):
+
+        def hay_espacio(tablero, fila_o_columna, filaDesde, filaHasta, columnaDesde, columnaHasta):
+            if fila_o_columna == "fila":
+                j = columnaDesde
+                while j <= columnaHasta:
+                    #print(j, " ", filaDesde)
+                    if tablero[filaDesde][j] != "O":
+                        return False
+                    j += 1
+            else: 
+                i = filaDesde
+                while i <= filaHasta:
+                    #print(i, " ", columnaHasta)
+                    if tablero[i][columnaDesde] != "O":
+                        return False
+                    i += 1
+            return True 
+
+        lon = longitud - 1
+
+        if fila_o_columna == "fila":
+            ok = 0
+            while (ok == 0):
+                fila = random.randint(0, maxPosicion)
+                columna = random.randint(0, maxPosicion-lon)
+                if(hay_espacio(tablero, "fila", fila, 0, columna, columna + lon)):
+                    ak = 0
+                    j = columna
+                    while (ak < longitud):
+                        tablero[fila][j] = objetivo
+                        j += 1
+                        ak += 1
+                        ok += 1 
+        else: 
+            ok = 0
+            while (ok == 0):
+                fila = random.randint(0, maxPosicion - lon)
+                columna = random.randint(0, maxPosicion)
+                if(hay_espacio(tablero, "columna", fila, fila + lon, columna, 0)):
+                    ak = 0
+                    i = fila
+                    while (ak < longitud):
+                        tablero[i][columna] = objetivo
+                        i += 1
+                        ak += 1
+                        ok += 1
+
+    tablero = jugador["mapa"]
     maxPosicion = len(tablero) - 1
-    filaAleatoria = random.randint(0, maxPosicion)
-    columnaInicial = random.randint(0, maxPosicion-5)
-    ak = 0
-    j = columnaInicial
-    while(ak < fuerte):
-        tablero[filaAleatoria][j] = "F"
-        j += 1
-        ak += 1
 
-    #Campamento de defensa, 3 celdas verticales
-    campamento = 3
-    maxPosicion =  len(tablero) - 1
-    ok = 0
-    while ok == 0:
-        filaAleatoria = random.randint(0, maxPosicion-3)
-        columnaInicial = random.randint(0, maxPosicion)
-        if tablero[filaAleatoria][columnaInicial] == "O" and tablero[filaAleatoria + 1][columnaInicial] == "O" and tablero[filaAleatoria + 2][columnaInicial] == "O":
-            ak = 0
-            i = filaAleatoria
-            while (ak < campamento):
-                tablero[i][columnaInicial] = "C"
-                i += 1
-                ak += 1
-                ok += 1
-
-    #Depósito de armas, 2 celdas horizontales. 
-    deposito= 2
-    maxp = len(tablero) - 1
-    ok = 0
-    while (ok == 0):
-        filA = random.randint(0, maxp)
-        colA = random.randint(0, maxp-1)
-        if(tablero[filA][colA] == "O") and (tablero[filA][colA + 1] == "O"):
-            ak = 0
-            j = colA
-            while (ak < deposito):
-                tablero[filA][j] = "A"
-                j += 1
-                ak += 1
-                ok += 1
-    
-    #Defensa Norte, 2 celda verticales
-    defensaN= 2
-    maxp = len(tablero) - 1
-    ok = 0
-    while (ok == 0):
-        filA = random.randint(0, maxp-1)
-        colA = random.randint(0, maxp)
-        if(tablero[filA][colA] == "O" and tablero[filA+1][colA] == "O"):
-            ak = 0
-            i = filA
-            while (ak < defensaN):
-                tablero[i][filA] = "N"
-                i += 1
-                ak += 1
-                ok += 1
-    
-    # Defensa Sur, 1 celda
-    defensaS= 1
-    maxp = len(tablero) - 1
-    ok = 0
-    while (ok == 0):
-        filA = random.randint(0, maxp)
-        colA = random.randint(0, maxp)
-        if(tablero[filA][colA] == "O"):
-            ak = 0
-            i = filA
-            while (ak < defensaS):
-                tablero[i][filA] = "S"
-                i += 1
-                ak += 1
-                ok += 1
+    if jugador["nombre"] == "Sandokan y sus amigos":
+        generar_objetivo(tablero, "fila", 6, "6")
+        generar_objetivo(tablero, "columna", 3, "3")
+        generar_objetivo(tablero, "fila", 2, "2")
+        generar_objetivo(tablero, "columna", 2, "7")
+        generar_objetivo(tablero, "fila", 1, "1")  
+    else:
+        generar_objetivo(tablero, "columna", 6, "6")
+        generar_objetivo(tablero, "fila", 3, "3")
+        generar_objetivo(tablero, "columna", 2, "2")
+        generar_objetivo(tablero, "fila", 2, "7")
+        generar_objetivo(tablero, "columna", 1, "1")
     
     return tablero
 
-#coloca los establesimientos de la armada britanica
-def poner_establecimientos_a(tablero):
-    #Crucero pesado, 6 celdas verticales
-    crucero = 6
-    maxPosicion = len(tablero) - 1
-    filaAleatoria = random.randint(0, maxPosicion-5)
-    columnaInicial = random.randint(0, maxPosicion)
-    ak = 0
-    i = filaAleatoria
-    while(ak < crucero):
-        tablero[i][columnaInicial] = "P"
-        i += 1
-        ak += 1
-
-    #Galeón, 3 celdas horizontal 
-    galeon = 3
-    maxPosicion =  len(tablero) - 1
-    ok = 0
-    while ok == 0:
-        filaAleatoria = random.randint(0, maxPosicion)
-        columnaInicial = random.randint(0, maxPosicion-2)
-        if tablero[filaAleatoria][columnaInicial] == "O" and tablero[filaAleatoria][columnaInicial + 1] == "O" and tablero[filaAleatoria][columnaInicial + 2] == "O":
-            ak = 0
-            j = columnaInicial
-            while (ak < galeon):
-                tablero[filaAleatoria][j] = "G"
-                j += 1
-                ak += 1
-                ok += 1
-    
-    #Galera, 2 celdas horizontales 
-    galera= 2
-    maxp = len(tablero) - 1
-    ok = 0
-    while (ok == 0):
-        filA = random.randint(0, maxp)
-        colA = random.randint(0, maxp-1)
-        if(tablero[filA][colA] == "O") and (tablero[filA][colA + 1] == "O"):
-            ak = 0
-            j = colA
-            while (ak < galera):
-                tablero[filA][j] = "A"
-                j += 1
-                ak += 1
-                ok += 1
-    
-    # Cañonero, 2 celdas verticales 
-    cañonero= 2
-    maxp = len(tablero) - 1
-    ok = 0
-    while (ok == 0):
-        filA = random.randint(0, maxp-1)
-        colA = random.randint(0, maxp)
-        if(tablero[filA][colA] == "O" and tablero[filA+1][colA] == "O"):
-            ak = 0
-            i = filA
-            while (ak < cañonero):
-                tablero[i][filA] = "C"
-                i += 1
-                ak += 1
-                ok += 1
-    # Barcaza, 1 celda
-    barcaza= 1
-    maxp = len(tablero) - 1
-    ok = 0
-    while (ok == 0):
-        filA = random.randint(0, maxp)
-        colA = random.randint(0, maxp)
-        if(tablero[filA][colA] == "O"):
-            ak = 0
-            i = filA
-            while (ak < barcaza):
-                tablero[i][filA] = "B"
-                i += 1
-                ak += 1
-                ok += 1
-    
-    return tablero
-
-#funcion para hundir establecimientos
-def turno_armada(tablero, tablero_A, campamento, flota_s, defensaS, fuerte, deposito, defensaN):
+def jugar(atacante, defensor):
     print("---------------------------------------------------------------------------")
-    print("Ataque de la Armada británica")
-    if flota_s > 0 :
-        fil = int(input("¿Qué fila desea atacar?  "))
-        col = int(input("¿Qué columna atacará?  "))
-        if tablero[fil-1][col-1]!= "O":
-            if tablero[fil-1][col-1] == "A":
-                deposito -= 1
-                if deposito == 0:
-                    print("DESTRUIDO EL DEPÓSITO DE ARMAS")
-                    flota_s -= 1
-            if tablero[fil-1][col-1] == "F":
-                fuerte -= 1
-                if fuerte == 0:
-                    print("DESTRUIDO EL FUERTE")
-                    flota_s -= 1
-            if tablero[fil-1][col-1] == "N":
-                defensaN -= 1
-                if defensaN == 0:
-                    print("DESTRUIDA LA DEFENSA NORTE")
-                    flota_s -= 1
-            if tablero[fil-1][col-1] == "S":
-                defensaS -= 1
-                if defensaS == 0:
-                    print("DESTRUIDA LA DEFENSA SUR")
-                    flota_s -=1
-            if tablero[fil-1][col-1] == "C":
-                campamento -= 1
-                if campamento == 0:
-                    flota_s -= 1
-                    print("DESTRUIDO EL CAMPAMENTO")
-            tablero_A[fil-1][col-1] = "X"
-            print ("IMPACTADO")
-        else:
-            print("Ha fallado!")
-            tablero_A[fil-1][col-1] = "#"
-    print("Aún tiene ", flota_s, " establecimientos por hundir")
-    return tablero   
+    print("Ataque de ", atacante["nombre"])
 
-#turno de sadokan
-def turno_sadokan(tablero2, tablero_S, flota_a, barcaza, crucero, galeon, galera, cañonero):
-    print("---------------------------------------------------------------------------")
-    print("Ataque de Sadokan")
-    if flota_a > 0 :
-        fil = int(input("¿Qué fila desea atacar?  "))
-        col = int(input("¿Qué columna atacara?  "))
-        if tablero2[fil-1][col-1]!= "O":
-            if tablero2[fil-1][col-1] == "A":
-                galera -= 1
-                if galera == 0:
-                    print("DESTRUIDO LA GALERA")
-                    flota_a -= 1
-            if tablero2[fil-1][col-1] == "P":
-                crucero -= 1
-                if crucero == 0:
-                    print("DESTRUIDO EL CRUCERO PESADO")
-                    flota_a -= 1
-            if tablero2[fil-1][col-1] == "C":
-                cañonero -= 1
-                if cañonero == 0:
-                    print("DESTRUIDO EL CAÑONERO")
-                    flota_a -= 1
-            if tablero2[fil-1][col-1] == "B":
-                barcaza -= 1
-                if barcaza == 0:
-                    print("DESTRUIDO LA BALCARZA")
-                    flota_a -=1
-            if tablero2[fil-1][col-1] == "G":
-                galeon -= 1
-                if galeon == 0:
-                    flota_a -= 1
-                    print("DESTRUIDO EL GALEÓN")
-            tablero_S[fil-1][col-1] = "X"
-            print ("IMPACTADO")
-        else:
-            print("Ha fallado!")
-            tablero_S[fil-1][col-1] = "#"
+    fil = int(input("¿Qué fila desea atacar?  ")) - 1
+    col = int(input("¿Qué columna atacara?  ")) - 1
+ 
+    if defensor["mapa"][fil][col] != "O":
+        if defensor["mapa"][fil][col] == "6":
+            defensor["objetivos"][0][0] -= 1
+            if defensor["objetivos"][0][0] == 0:
+                print(defensor["objetivos"][0][1], " DESTRUIDO/A")
+        elif defensor["mapa"][fil][col] == "3":
+            defensor["objetivos"][1][0] -= 1
+            if defensor["objetivos"][1][0] == 0:
+                print(defensor["objetivos"][1][1], " DESTRUIDO/A")
+        elif defensor["mapa"][fil][col] == "2":
+            defensor["objetivos"][2][0] -= 1
+            if defensor["objetivos"][2][0] == 0:
+                print(defensor["objetivos"][2][1], " DESTRUIDO/A")
+        elif defensor["mapa"][fil][col] == "7":
+            defensor["objetivos"][3][0] -= 1
+            if defensor["objetivos"][3][0] == 0:
+                print(defensor["objetivos"][3][1], " DESTRUIDO/A")
+        elif defensor["mapa"][fil][col] == "1":
+            defensor["objetivos"][4][0] -= 1
+            if defensor["objetivos"][4][0] == 0:
+                print(defensor["objetivos"][4][1], " DESTRUIDO/A")
+        
+        atacante["tablero"][fil][col] = "X"
+        print ("IMPACTADO")
+    else:
+        print("Ha fallado!")
+        atacante["tablero"][fil][col] = "#"
 
-    print("Aún tiene ", flota_a, " establecimientos por hundir")
-    return tablero2 
+    print("Aún tiene ", objetivos_restantes(defensor), " objetivos por destruir")
 
-# creamos el tablero
+# Creamos el tablero
 def crear_mapa(tamanio):
     tablero = []
     for i in range(tamanio):
-        fila = []
-        tablero.append(fila)
-        for j in range(tamanio):
-            fila.append("O")
-    return  tablero
+        tablero.append([])
+        j = 0
+        while j < tamanio:
+            tablero[i].append("O")
+            j += 1
+    return tablero
 
-# definimos una funcion que nos muestre el tablero
-
+# Definimos una funcion que nos muestre el tablero
 def mostrar_mapa(tablero):
     abecedario = "ABCDEFGHIJKLMNOPQRST"
     for i in range(len(tablero)):
@@ -277,55 +159,81 @@ def mostrar_mapa(tablero):
     for fila in range(len(tablero)):
         print(f"{fila+1} {tablero[fila]}")
 
+def quedan_objetivos(jugador):
+    for i in range(5):
+        if jugador["objetivos"][i][0] != 0:
+            return True 
+    return False
+
+def objetivos_restantes(jugador):
+    objetivos = 5
+    for i in range(5):
+        if jugador["objetivos"][i][0] == 0:
+            objetivos -= 1
+    return objetivos
+
 def main():
-    print("BIENVENIDO AL JUEGO DE SANDOKAN Y SUS VALIENTES AMIGOS CONTRA LA ARMADA BRITANICA")
-    print("LOS ESTABLESIMIENTOS SERAN COLOCADOS DE MANERA ALEATOREA CADA VANDO TENDRA 5")
+    print("BIENVENIDO AL JUEGO DE SANDOKAN Y SUS VALIENTES AMIGOS CONTRA LA ARMADA BRITÁNICA")
+    print("LOS OBJETIVOS SERÁN COLOCADOS DE MANERA ALEATORIA. CADA BANDO TENDRÁ 5")
     print("EL TAMAÑO RECOMENDADO DE TABLERO ES 10")
     print("O ES EL AGUA, # ES EL TIRO ERRADO, X ES CUANDO SE LE PEGA AL OBJETIVO")
 
     print("¿QUE JUGADOR DESEA SER?")
-    eleccion= int(input("Sadokan y sus valientes amigos? presione 1 / La Armada británica? presione 2 : "))
-    jugadores(eleccion)
 
-    tamanio = int(input("elija el tamaño del tablero: "))
+    jugador1 = {
+        "nombre": "",
+        "mapa": [],
+        "objetivos": [
+            [6, ""],
+            [3, ""],
+            [2, ""],
+            [2, ""],
+            [1, ""]
+        ]
+    }
 
-    #tablero donde tengo los barcos de sadokan:
-    tablero = crear_mapa(tamanio)
-    #tablero donde tengo los barcos de la armada:
-    tablero2 = crear_mapa(tamanio)
-    #tablero que vera la armada
-    tablero_A= crear_mapa(tamanio)
-    #tablero que vera sadokan
-    tablero_S = crear_mapa(tamanio)
+    jugador2 = {
+        "nombre": "",
+        "mapa": [],
+        "tablero": [],
+        "objetivos": [
+            [6, ""],
+            [3, ""],
+            [2, ""],
+            [2, ""],
+            [1, ""]
+        ]
+    }
 
-    # QUITÉ LAS DECLARACIONES DE VARIABLES QUE NO SERVÍAN
-    mostrar_mapa(tablero)
-    poner_establecimientos_s(tablero)
-    poner_establecimientos_a(tablero2)
+    eleccion= int(input("Sandokan y sus valientes amigos? presione 1 / La Armada británica? presione 2 : "))
+    jugadores(eleccion, jugador1, jugador2)
 
-    #tablero_invisible1 = mostrar_mapa(tablero_sadokan)
-    #tablero_invisible2 = mostrar_mapa(tablero_armada)
+    tamanio = int(input("Elija el tamaño del tablero: "))
 
-    flota_a = 5
-    flota_s = 5
-    defensaS = 1
-    fuerte = 6 
-    deposito= 2
-    defensaN= 2
-    campamento = 3
-    barcaza = 1
-    crucero = 6
-    galeon = 3
-    galera= 2
-    cañonero= 2
-    while (flota_a != 0 or flota_s != 0):
-        # CÓMO ESTABA ESCRITO TU CÓDIGO, DA LO MISMO QUIÉN SEA EL JUGADOR 1 PORQUE SIEMPRE ATACA PRIMERO LA ARMADA BRITÁNICA
-        # LO DEJO HECHO PARA QUE EL JUGADOR 1 SEA EL QUE ATAQUE PRIMERO, ADEMÁS QUITÉ LAS VARIABLES QUE NO SE USABAN
+    jugador1["mapa"] = crear_mapa(tamanio)
+    jugador2["mapa"] = crear_mapa(tamanio)
+    jugador1["tablero"] = crear_mapa(tamanio)
+    jugador2["tablero"] = crear_mapa(tamanio)
+
+    jugador1["mapa"] = poner_establecimientos(jugador1)
+    jugador2["mapa"] = poner_establecimientos(jugador2)
 
 
-        turno_armada(tablero, tablero_A, campamento, flota_s, defensaS, fuerte, deposito, defensaN)
-        mostrar_mapa(tablero_A)
 
-        turno_sadokan(tablero2, tablero_S, flota_a, barcaza, crucero, galeon, galera, cañonero)
-        mostrar_mapa(tablero_S)
+    while (quedan_objetivos(jugador1) and quedan_objetivos(jugador2)):
+        
+        jugar(jugador1, jugador2)
+        mostrar_mapa(jugador1["tablero"])
+
+        if not quedan_objetivos(jugador2):
+            break
+
+        jugar(jugador2, jugador1)
+        mostrar_mapa(jugador2["tablero"])
+    
+    if quedan_objetivos(jugador1):
+        print("Ganó el Jugador 1: ", jugador1["nombre"])
+    else:
+        print("Ganó el Jugador 2: ", jugador2["nombre"])
+
 main()
