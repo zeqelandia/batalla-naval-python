@@ -42,14 +42,12 @@ def hay_espacio(tablero, fila_o_columna, filaDesde, filaHasta, columnaDesde, col
     if fila_o_columna == "fila":
         j = columnaDesde
         while j <= columnaHasta:
-            #print(j, " ", filaDesde)
             if tablero[filaDesde][j] != "O":
                 return False
             j += 1
     else: 
         i = filaDesde
         while i <= filaHasta:
-            #print(i, " ", columnaHasta)
             if tablero[i][columnaDesde] != "O":
                 return False
             i += 1
@@ -139,6 +137,7 @@ def jugar(atacante, defensor):
     col = int(input("¿Qué columna atacara?  ")) - 1
     print()
 
+    # AHORA JUGAR FUNCIONA DE FORMA DINÁMICA VERIFICANDO TODOS LOS OBJETIVOS
     for i in range(len(ubicaciones)):
         for j in range(len(ubicaciones[i])):
             fila_de_ubicacion = ubicaciones[i][j][0]
