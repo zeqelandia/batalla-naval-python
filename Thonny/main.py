@@ -225,12 +225,10 @@ def main():
         jugar(jugador1, jugador2)
         mostrar_mapa(jugador1["tablero"])
 
-        if not quedan_objetivos(jugador2):
-            break
+        if quedan_objetivos(jugador2):
+            jugar(jugador2, jugador1)
+            mostrar_mapa(jugador2["tablero"])
 
-        jugar(jugador2, jugador1)
-        mostrar_mapa(jugador2["tablero"])
-    
     if quedan_objetivos(jugador1):
         print("Ganó el Jugador 1: ", jugador1["nombre"])
     else:
